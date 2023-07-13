@@ -7,22 +7,22 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] PlayerInput input;
-    public float moveSpeed;//Íæ¼ÒÒÆ¶¯ËÙ¶È
+    public float moveSpeed;//ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ù¶ï¿½
     Rigidbody2D myrigidbody;
 
-    [SerializeField] float PlayerPaddingX=0.3f;//·É»úµÄ»úÉí±ß¾à
+    [SerializeField] float PlayerPaddingX=0.3f;//ï¿½É»ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ß¾ï¿½
     [SerializeField] float PlayerPaddingY=0.2f;
 
-    //ÓÅ»¯ÊÖ¸Ð
-    [SerializeField] float accelerationTime = 3f;//¼ÓËÙÊ±¼ä
-    [SerializeField] float decelerationTIme = 3f;//¼õËÙÊ±¼ä
+    //ï¿½Å»ï¿½ï¿½Ö¸ï¿½
+    [SerializeField] float accelerationTime = 3f;//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+    [SerializeField] float decelerationTIme = 3f;//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
     private void Awake()
     {
         myrigidbody = GetComponent<Rigidbody2D>();
     }
     void OnEnable()
     {
-        input.onMove += Move;//°ó¶¨ÊÂ¼þ
+        input.onMove += Move;//ï¿½ï¿½ï¿½Â¼ï¿½
         input.onStopMove += StopMove;
     }
     private void OnDisable()
@@ -33,13 +33,13 @@ public class Player : MonoBehaviour
     private void Start()
     {
         myrigidbody.gravityScale = 0f;
-        input.EnableGameplayInput();//¼¤»îÊäÈëÐÅºÅ
+        input.EnableGameplayInput();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åºï¿½
     }
     private void Update()
     {
         
     }
-    private void Move(Vector2 moveInput)//½ÓÊÕµÀÊäÈëµÄÐÅºÅºóÒªÖ´ÐÐµÄÒÆ¶¯Âß¼­
+    private void Move(Vector2 moveInput)//ï¿½ï¿½ï¿½Õµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÅºÅºï¿½ÒªÖ´ï¿½Ðµï¿½ï¿½Æ¶ï¿½ï¿½ß¼ï¿½
     {
         myrigidbody.velocity = moveInput * moveSpeed;
         StartCoroutine(MovePositionLimitCoroutine());
@@ -51,22 +51,21 @@ public class Player : MonoBehaviour
         StopCoroutine(MovePositionLimitCoroutine());
     }
 
-    IEnumerator MovePositionLimitCoroutine()//ÓÃÓÚÏÞÖÆÍæ¼ÒÔÚÊÓ¿ÚÇøÓòÄÚµÄÐ­³Ì
+    IEnumerator MovePositionLimitCoroutine()//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½Ð­ï¿½ï¿½
     {
         while(true)
         {
-            transform.position = ViewPort.Instance.PlayerMoveablePosition(transform.position, PlayerPaddingX, PlayerPaddingY);//ÏÞÖÆÍæ¼ÒµÄÎ»ÖÃÔÚÊÓ¿ÚÖ®ÄÚ
+            transform.position = ViewPort.Instance.PlayerMoveablePosition(transform.position, PlayerPaddingX, PlayerPaddingY);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½Ö®ï¿½ï¿½
             yield return null;
         }
     }
-    IEnumerator MoveCoroutine(Vector2 moveVelocity)//ÊµÏÖÎïÌåÒÆ¶¯¼ÓËÙ¶ÈµÄÐ­³Ì
+    IEnumerator MoveCoroutine(Vector2 moveVelocity)//Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ù¶Èµï¿½Ð­ï¿½ï¿½
     {
         float currentTime = 0f;
         while(currentTime<accelerationTime)
         {
             currentTime += Time.fixedDeltaTime/accelerationTime;
-
-            Vector2.Lerp(myrigidbody.velocity, moveVelocity, t / accelerationTime);
+            //Vector2.Lerp(myrigidbody.velocity, moveVelocity, t / accelerationTime);
             yield return null;
         }
 
