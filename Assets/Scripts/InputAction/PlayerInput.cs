@@ -9,6 +9,9 @@ public class PlayerInput : ScriptableObject,InputActions.IGamePlayActions
     InputActions inputActions;
     public event UnityAction<Vector2> onMove=delegate { };
     public event UnityAction onStopMove = delegate { };
+    
+    public event UnityAction onFire=delegate {  };
+    public event UnityAction onStopFire=delegate {  }; 
     void OnEnable()
     {
         inputActions = new InputActions();
@@ -48,5 +51,16 @@ public class PlayerInput : ScriptableObject,InputActions.IGamePlayActions
         } 
     }
 
-  
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if(context.phase==InputActionPhase.Performed)//当按键被持续按下时
+        {
+           onFire.Invoke();
+           
+        }
+        if(context.phase==InputActionPhase.Canceled)//停止按下按键的时候
+        {
+            onStopFire.Invoke();
+        } 
+    }
 }
