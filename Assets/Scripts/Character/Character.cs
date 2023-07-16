@@ -7,17 +7,34 @@ public class Character : MonoBehaviour
 {
     [SerializeField] private GameObject deathVFX;
     [SerializeField] protected float maxHealth;
+    [Header("---HealthBar---")] 
+    [SerializeField] private StatsBar onHeadHealthBar;
+    [SerializeField] private bool showOnHeadHealthBar = true;
 
     protected float health;
 
     protected virtual void OnEnable()
     {
         health = maxHealth;//初始化生命值为最大值
+        if (showOnHeadHealthBar)
+        {
+            ShowOnHeadHealthBar();
+        }
+        else
+        {
+            HideOnHeadHealthBar();
+        }
     }
 
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
+        if (showOnHeadHealthBar&&gameObject.activeSelf)
+        {
+            onHeadHealthBar.UpdateStats(health,maxHealth);
+        }
+        
+        
         if (health <= 0f)
         {
             Die();
@@ -35,6 +52,10 @@ public class Character : MonoBehaviour
     {
         if (health == maxHealth) return;
         health = Mathf.Clamp(health + value, 0, maxHealth);
+        if (showOnHeadHealthBar)
+        {
+            onHeadHealthBar.UpdateStats(health,maxHealth);
+        }
     }
 
     public IEnumerator HealthRegenerateCoroutine(WaitForSeconds waitTime, float percent)//缓慢持续回血
@@ -54,4 +75,18 @@ public class Character : MonoBehaviour
             TakeDamage(maxHealth*percent);
         }
     }
+    #region 血条
+
+    public void ShowOnHeadHealthBar()
+    {
+        onHeadHealthBar.gameObject.SetActive(true);
+        onHeadHealthBar.Initialize(health,maxHealth);
+    }
+
+    public void HideOnHeadHealthBar()
+    {
+        onHeadHealthBar.gameObject.SetActive(false);
+    }
+
+    #endregion
 }

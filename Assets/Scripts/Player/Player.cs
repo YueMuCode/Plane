@@ -16,11 +16,14 @@ public class Player : Character
     [SerializeField,Range(0f,1f)] private float healthRegeneratePercent;
     [SerializeField] private WaitForSeconds waitHealthRegenerateTime;
     Coroutine healthRegenerateCoroutine;
+    [SerializeField] private StatsBar_HUD statsBar_HUD;
+  
     
     [Header("---MOVE---")]
     [SerializeField] PlayerInput input;
     public float moveSpeed;//����ƶ��ٶ�
     Rigidbody2D myrigidbody;
+    
 
     [SerializeField] float PlayerPaddingX=0.3f;//�ɻ��Ļ���߾�
     [SerializeField] float PlayerPaddingY=0.2f;
@@ -30,7 +33,6 @@ public class Player : Character
     [SerializeField] float accelerationTime = 3f;//加速度
     [SerializeField] float decelerationTIme = 3f;//减速度  
     [SerializeField] float moveRotationAngle = 50f;
-    
     //子弹
     [SerializeField] GameObject projectile1;
     [SerializeField] GameObject projectile2;
@@ -41,18 +43,23 @@ public class Player : Character
     [SerializeField] float fireTime=0.2f;
     private WaitForSeconds waitForFireInterval;
     private Coroutine tempCoroutine;//中间变量
-
     [SerializeField,Range(0,2)] private int weaponPowre = 0;
-    
-    
-    
-    
-    
-    
+
+    [Header("---Dodge---")] 
+    [SerializeField,Range(0,100)] private int dodgeEnergyCost = 25;
+    [SerializeField] private float maxRoll = 720f;
+    [SerializeField] private float rollSpeed = 360f;
+    [SerializeField] private Vector3 dodgeScale = new Vector3(0.5f, 0.5f, 0.5f);
+    private Collider2D myCollider;
+    private float currentRoll;
+    private bool isDodging=false;
+    private float dodgeDuration;
     
     private void Awake()
     {
         myrigidbody = GetComponent<Rigidbody2D>();
+        myCollider = GetComponent<Collider2D>();
+        dodgeDuration = maxRoll / rollSpeed;
     }
     protected override void OnEnable()
     {
@@ -61,6 +68,8 @@ public class Player : Character
         input.onStopMove += StopMove;
         input.onFire += Fire;
         input.onStopFire += stopFire;
+        input.onDodge += Dodge;
+
     }
     private void OnDisable()
     {
@@ -68,9 +77,11 @@ public class Player : Character
         input.onStopMove -= StopMove;
         input.onFire -= Fire;
         input.onStopFire -= stopFire;
+        input.onDodge -= Dodge;
     }
     private void Start()
     {
+        statsBar_HUD.Initialize(health,maxHealth);
         myrigidbody.gravityScale = 0f;
         input.EnableGameplayInput();//���������ź�
         waitForFireInterval=new WaitForSeconds(fireTime);
@@ -105,8 +116,8 @@ public class Player : Character
         }
         
         
-        StopCoroutine(MovePositionLimitCoroutine());
-       tempCoroutine= StartCoroutine(MoveCoroutine(decelerationTIme, Vector2.zero,Quaternion.identity));
+        StopCoroutine(nameof(MovePositionLimitCoroutine));
+        tempCoroutine= StartCoroutine(MoveCoroutine(decelerationTIme, Vector2.zero,Quaternion.identity));
     }
 
     IEnumerator MovePositionLimitCoroutine()//��������������ӿ������ڵ�Э��
@@ -197,6 +208,7 @@ public class Player : Character
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
+        statsBar_HUD.UpdateStats(health,maxHealth);
         if (gameObject.activeSelf)
         {
             if (regenerateHealth)
@@ -210,5 +222,59 @@ public class Player : Character
         }
     }
 
+    public override void RestoreHealth(float value)
+    {
+        base.RestoreHealth(value);
+        statsBar_HUD.UpdateStats(health,maxHealth);
+    }
+
+    public override void Die()
+    {
+        statsBar_HUD.UpdateStats(0f,maxHealth);
+        base.Die();
+    }
+
+    #endregion
+
+
+    #region Dodge
+
+    void Dodge()
+    {
+        if (isDodging||!PlayerEnergy.Instance.IsEnough(dodgeEnergyCost)) return;
+        
+        StartCoroutine(nameof(DodgeCoroutine));
+    }
+
+    IEnumerator DodgeCoroutine()
+    {
+        isDodging = true;
+        //消耗能量
+        PlayerEnergy.Instance.Use(dodgeEnergyCost);
+        //闪避
+        myCollider.isTrigger = true;
+        //翻滚
+        currentRoll = 0f;
+        var scale = transform.localScale;
+        while (currentRoll < maxRoll)
+        {
+            currentRoll += rollSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.AngleAxis(currentRoll, Vector3.right);
+            if (currentRoll < maxRoll / 2f)
+            {
+                scale -= (Time.deltaTime / dodgeDuration) * Vector3.one;
+            }
+            else
+            {
+                scale += (Time.deltaTime / dodgeDuration) * Vector3.one;
+            }
+
+            transform.localScale = scale;
+            yield return null;
+        }
+
+        myCollider.isTrigger = false;
+        isDodging = false;
+    }
     #endregion
 }

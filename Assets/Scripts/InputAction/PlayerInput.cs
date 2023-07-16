@@ -12,6 +12,9 @@ public class PlayerInput : ScriptableObject,InputActions.IGamePlayActions
     
     public event UnityAction onFire=delegate {  };
     public event UnityAction onStopFire=delegate {  }; 
+    
+    public event UnityAction onDodge=delegate {  };
+
     void OnEnable()
     {
         inputActions = new InputActions();
@@ -62,5 +65,13 @@ public class PlayerInput : ScriptableObject,InputActions.IGamePlayActions
         {
             onStopFire.Invoke();
         } 
+    }
+
+    public void OnDodge(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            onDodge.Invoke();
+        }
     }
 }
