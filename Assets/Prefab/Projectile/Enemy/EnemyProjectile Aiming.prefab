@@ -145,6 +145,11 @@ MonoBehaviour:
   damage: 2
   moveSpeed: 5
   moveDirection: {x: -1, y: 0}
+  hitSFX:
+  - audioClip: {fileID: 8300000, guid: 2e071f5b8b8467d45a5e6e24c23c6ad4, type: 3}
+    volume: 0.3
+  - audioClip: {fileID: 8300000, guid: 958408b32ccf3714ea02821877b0870c, type: 3}
+    volume: 0.3
 --- !u!70 &-7156484681085455298
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

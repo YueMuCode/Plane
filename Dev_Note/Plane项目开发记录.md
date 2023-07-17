@@ -266,9 +266,29 @@ Volume脚本为URP包自带
 
 
 
+## 17.持久泛型单例（不会随着场景的切换而销毁）
 
 
 
+## 18.音效播放功能
+
+![image-20230717235231326](C:\Users\LinYueMU\AppData\Roaming\Typora\typora-user-images\image-20230717235231326.png)
+
+![image-20230717235917225](C:\Users\LinYueMU\AppData\Roaming\Typora\typora-user-images\image-20230717235917225.png)
+
+
+
+![image-20230718000959424](C:\Users\LinYueMU\AppData\Roaming\Typora\typora-user-images\image-20230718000959424.png)
+
+每次调用这个函数，都会重新播放，导致声音又断续的感觉
+
+
+
+解决办法：
+
+![image-20230718001034576](C:\Users\LinYueMU\AppData\Roaming\Typora\typora-user-images\image-20230718001034576.png)
+
+不会覆盖
 
 
 

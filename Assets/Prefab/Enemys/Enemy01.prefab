@@ -14623,6 +14623,13 @@ MonoBehaviour:
   projectiles:
   - {fileID: 2921942583794357655, guid: 00919469191c6f84aa0fa28dee41d7ce, type: 3}
   muzzle: {fileID: 2914082941697677037}
+  enemyProjectileSFX:
+  - audioClip: {fileID: 8300000, guid: 406abe6e803b244eca380af5865dc5cb, type: 3}
+    volume: 0.3
+  - audioClip: {fileID: 8300000, guid: 56c2ee139e8c844ba9a3a17370e3b763, type: 3}
+    volume: 0.3
+  - audioClip: {fileID: 8300000, guid: 35644134c067099459f55ecfa2efd85d, type: 3}
+    volume: 0.3
 --- !u!114 &2478899091552045147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14639,6 +14646,11 @@ MonoBehaviour:
   maxHealth: 50
   onHeadHealthBar: {fileID: 8250487642416984056}
   showOnHeadHealthBar: 1
+  deathSFX:
+  - audioClip: {fileID: 8300000, guid: 9314f85ef4c5ea04a87a0323c78fdd2e, type: 3}
+    volume: 0.3
+  - audioClip: {fileID: 8300000, guid: 0f2184b0c1d094741b11e8f4077c52e9, type: 3}
+    volume: 0.3
   enemyDeathRewardEnergy: 3
 --- !u!50 &3925784801456328118
 Rigidbody2D:

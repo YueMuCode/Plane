@@ -50,6 +50,10 @@ public class Player : Character
     [SerializeField] private float maxRoll = 720f;
     [SerializeField] private float rollSpeed = 360f;
     [SerializeField] private Vector3 dodgeScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+    [Header("---Audio----")] [SerializeField]
+    private AudioData[] projectileLauchSFX;
+
     private Collider2D myCollider;
     private float currentRoll;
     private bool isDodging=false;
@@ -196,6 +200,7 @@ public class Player : Character
                 default:
                     break;
             }
+            AudioManager.Instance.PlayRandomSFX(projectileLauchSFX);
             //yield return new WaitForSeconds(fireTime);//尽量不要在while里面new
             yield return waitForFireInterval;
         }

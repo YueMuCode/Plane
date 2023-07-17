@@ -11,6 +11,9 @@ public class Character : MonoBehaviour
     [SerializeField] private StatsBar onHeadHealthBar;
     [SerializeField] private bool showOnHeadHealthBar = true;
 
+    [Header("---Audio---")] 
+    [SerializeField] private AudioData[] deathSFX;
+
     protected float health;
 
     protected virtual void OnEnable()
@@ -45,6 +48,7 @@ public class Character : MonoBehaviour
     {
         health = 0f;
         PoolManager.Release(deathVFX, transform.position);
+        AudioManager.Instance.PlayRandomSFX(deathSFX);
         gameObject.SetActive(false);
     }
 
