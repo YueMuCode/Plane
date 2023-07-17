@@ -86,7 +86,7 @@ public class Player : Character
         input.EnableGameplayInput();//���������ź�
         waitForFireInterval=new WaitForSeconds(fireTime);
         waitHealthRegenerateTime = new WaitForSeconds(healthRegenerateTime);
-        TakeDamage(50f);
+       // TakeDamage(50f);
     }
 
   

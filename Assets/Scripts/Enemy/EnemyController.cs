@@ -54,7 +54,7 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    #region 敌人开发
+    #region 敌人开火
 
     IEnumerator RandomlyFireCoroutine()
     {

@@ -14,7 +14,7 @@ public class Pool
    [SerializeField] private int size = 1;
    private Queue<GameObject> queue;
    private Transform parent;//为生成出来的预制体指定父级,便于管理编辑器窗口
-   public void Initialize(Transform parent)
+   public void Initialize(Transform parent)//将生成的对象存入队列中
    {
       queue = new Queue<GameObject>();
       this.parent = parent;
@@ -24,14 +24,14 @@ public class Pool
       }
    }
 
-   GameObject copy()
+   GameObject copy()//生成对象
    {
       var copy = GameObject.Instantiate(prefab,parent);
       copy.SetActive(false);
       return copy;
    }
 
-   GameObject AvailablaObject()
+   GameObject AvailablaObject()//从池中（队列queue）取出对象
    {
       GameObject availableObject = null;
       if (queue.Count > 0&&!queue.Peek().activeSelf)
@@ -42,10 +42,10 @@ public class Pool
       {
          availableObject = copy();
       }
-      queue.Enqueue(availableObject);//直接重新入队
-      return availableObject;
+      queue.Enqueue(availableObject);//直接重新入队这里实际上已经完成了对象的回收操作。
+      return availableObject;//相当于只是返回了对象的引用
    }
-   public GameObject preparedObject()
+   public GameObject preparedObject()//从池中取出对应的对象之后，将对象进行必要的初始化，这里只是做了对象的激活操作。
    {
       GameObject preparedObject = AvailablaObject();
       preparedObject.SetActive(true);

@@ -264,3 +264,23 @@ Volume脚本为URP包自带
 
 ![image-20230716234222412](C:\Users\LinYueMU\AppData\Roaming\Typora\typora-user-images\image-20230716234222412.png)
 
+
+
+
+
+
+
+
+
+
+
+
+
+# 二、系统
+
+### 1.对象池系统： Pool.cs PoolManager.cs
+
+Pool.cs生成对象池（根据传入的预制体和数量，生成对应的预制体）
+
+PoolManager.cs管理生成的对象池（管理多个对象池（敌人对象池、子弹对象池等），的使用）
+

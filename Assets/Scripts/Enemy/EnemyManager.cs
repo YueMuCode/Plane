@@ -11,20 +11,20 @@ public class EnemyManager : Singleton<EnemyManager>
    [SerializeField] private GameObject[] enemyPrefabs;
    [SerializeField] private float timeBetweenSpawns = 1f;
    [SerializeField] private float timeBetweenWaves = 1f;
-   [SerializeField] private int minEnemyAmount = 4;
-   [SerializeField] private int maxEnemyAmount = 10;
-   [SerializeField] private bool spawnEnemy = true;
-   [SerializeField] private GameObject waveUI;
-   private int waveNumber = 1;
-   private int enemyAmount;
-   private List<GameObject> enemyList;
+   [SerializeField] private int minEnemyAmount = 4;//最低的敌人数量
+   [SerializeField] private int maxEnemyAmount = 10;//最多的敌人数量
+   [SerializeField] private bool spawnEnemy = true;//是否自动生成敌人
+   [SerializeField] private GameObject waveUI;//敌人的波数显示UI
+   private int waveNumber = 1;//当前波数
+   private int enemyAmount;//敌人的数量
+   private List<GameObject> enemyList;//记录当前存活的敌人数量
    
    
-   private WaitForSeconds waitTimeBetweenSpawns;
-   private WaitForSeconds waitTimeBetweenWaves;
-   private WaitUntil waitUntilNoEnemy;
+   private WaitForSeconds waitTimeBetweenSpawns;//敌人生成的间隔时间
+   private WaitForSeconds waitTimeBetweenWaves;//波数UI显示的时间
+   private WaitUntil waitUntilNoEnemy;//知道没有敌人
    
-   protected override void Awake()
+   protected override void Awake()//初始化好各种需要到的对象变量
    {
       base.Awake();
       waitTimeBetweenSpawns = new WaitForSeconds(timeBetweenSpawns);
@@ -33,34 +33,34 @@ public class EnemyManager : Singleton<EnemyManager>
       waitTimeBetweenWaves = new WaitForSeconds(timeBetweenWaves);
    }
 
-   IEnumerator Start()
+   IEnumerator Start()//
    {
       while (spawnEnemy)
       {
-         yield return waitUntilNoEnemy;
-         waveUI.SetActive(true);
-         yield return waitTimeBetweenWaves;
-         waveUI.SetActive(false);
+         yield return waitUntilNoEnemy;//挂起，直到当前波数的敌人为0
+         waveUI.SetActive(true);//激活波数UI
+         yield return waitTimeBetweenWaves;//挂起，间隔时间为UI动画的播放时间
+         waveUI.SetActive(false);//将波数UI设置为非激活状态
          yield return StartCoroutine(nameof(RandomlySpawnCoroutine));
       }
       
    }
 
-   IEnumerator RandomlySpawnCoroutine()
+   IEnumerator RandomlySpawnCoroutine()//生成敌人
    {
       enemyAmount = Mathf.Clamp(enemyAmount, minEnemyAmount + waveNumber / 3, maxEnemyAmount);
       for (int i = 0; i < enemyAmount; i++)
       {
-         enemyList.Add( PoolManager.Release(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)]));
+         enemyList.Add( PoolManager.Release(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)]));//从对应的对象池中取出对象
          yield return waitTimeBetweenSpawns;
       }
 
       waveNumber++;
    }
 
-   public void RemoveFromList(GameObject enemy) => enemyList.Remove(enemy);
+   public void RemoveFromList(GameObject enemy) => enemyList.Remove(enemy);//当敌人死亡，将这个对象移除出list，用于计算当前波数存活的敌人数量
 
-   bool NoEnemy()
+   bool NoEnemy()//查看当前存活的敌人数量是否为零
    {
       return enemyList.Count == 0;
    }

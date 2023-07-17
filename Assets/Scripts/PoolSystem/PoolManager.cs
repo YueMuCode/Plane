@@ -44,12 +44,12 @@ public class PoolManager : MonoBehaviour
       }
    }
    #endif
-   void Initialize(Pool[] pools)
+   void Initialize(Pool[] pools)//将对象池存入字典中，以便使用的时候可以直接传入对象的类型直接调用出相应的对象
    {
       foreach (var pool in pools)
       {
          #if UNITY_EDITOR
-         if (dictionary.ContainsKey(pool.Prefab))
+         if (dictionary.ContainsKey(pool.Prefab))//防止存入多相同的对象池
          {
             Debug.LogError("相同的池被初始化"+pool.Prefab.name);
             continue;
@@ -62,7 +62,7 @@ public class PoolManager : MonoBehaviour
       }
    }
 
-   public static GameObject Release(GameObject prefab)
+   public static GameObject Release(GameObject prefab)//根据传入的预制体，经过字典查找返回一个可以使用的对象
    {
       #if UNITY_EDITOR
       if (!dictionary.ContainsKey(prefab))

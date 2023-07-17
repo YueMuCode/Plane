@@ -15,7 +15,7 @@ public class Character : MonoBehaviour
 
     protected virtual void OnEnable()
     {
-        health = maxHealth;//初始化生命值为最大值
+        health =maxHealth;//初始化生命值为最大值
         if (showOnHeadHealthBar)
         {
             ShowOnHeadHealthBar();
@@ -67,7 +67,7 @@ public class Character : MonoBehaviour
         }
     }
     
-    public IEnumerator DamageOverTimeCoroutine(WaitForSeconds waitTime, float percent)//缓慢持续回血
+    public IEnumerator DamageOverTimeCoroutine(WaitForSeconds waitTime, float percent)//缓慢持续扣血
     {
         while (health>0f)
         {
