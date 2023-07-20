@@ -13,7 +13,7 @@ public class Character : MonoBehaviour
 
     [Header("---Audio---")] 
     [SerializeField] private AudioData[] deathSFX;
-
+ 
     protected float health;
 
     protected virtual void OnEnable()

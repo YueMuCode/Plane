@@ -5,8 +5,8 @@ using UnityEngine;
 public class AudioManager : PersistentSingleton<AudioManager>
 {
    [SerializeField] private AudioSource sFxPlayer;
-   [SerializeField] private float minPitch = 0.9f;
-   [SerializeField] private float maxpitch = 1.1f;
+    private const float minPitch = 0.9f;
+    private const float maxpitch = 1.1f;
    public void PlaySFX(AudioData audioData)//  ∫œ”√”⁄UI
    {
       sFxPlayer.PlayOneShot(audioData.audioClip,audioData.volume);

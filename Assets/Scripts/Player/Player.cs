@@ -53,7 +53,8 @@ public class Player : Character
 
     [Header("---Audio----")] [SerializeField]
     private AudioData[] projectileLauchSFX;
-
+    [SerializeField] private AudioData[] dodgeSFX;
+   
     private Collider2D myCollider;
     private float currentRoll;
     private bool isDodging=false;
@@ -151,6 +152,7 @@ public class Player : Character
 
     void Fire()
     {
+        
         StartCoroutine("FireCoroutine");
     }
 
@@ -247,7 +249,7 @@ public class Player : Character
     void Dodge()
     {
         if (isDodging||!PlayerEnergy.Instance.IsEnough(dodgeEnergyCost)) return;
-        
+        AudioManager.Instance.PlayRandomSFX(dodgeSFX);
         StartCoroutine(nameof(DodgeCoroutine));
     }
 

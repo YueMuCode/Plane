@@ -294,9 +294,37 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
-      propertyPath: projectileLauchSFX.Array.size
-      value: 3
+      propertyPath: deathSFX.Array.size
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: dodgeSFX.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: lanuchSFX.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: deathSFX.Array.data[0].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: dodgeSFX.Array.data[0].volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: projectileLauchSFX.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: deathSFX.Array.data[0].audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 1fd31868d68903d4f9e2c4a3b7ef98f3, type: 3}
+    - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
+      propertyPath: dodgeSFX.Array.data[0].audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 9fc03a91b5216b74394a6166059d68f2, type: 3}
     - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
       propertyPath: projectileLauchSFX.Array.data[0].volume
       value: 1
@@ -312,11 +340,11 @@ PrefabInstance:
     - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
       propertyPath: projectileLauchSFX.Array.data[0].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 1fd31868d68903d4f9e2c4a3b7ef98f3, type: 3}
+      objectReference: {fileID: 8300000, guid: 53622e00a83edfb49a70bcbb9a4eebec, type: 3}
     - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
       propertyPath: projectileLauchSFX.Array.data[1].audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 9fc03a91b5216b74394a6166059d68f2, type: 3}
+      objectReference: {fileID: 8300000, guid: 53622e00a83edfb49a70bcbb9a4eebec, type: 3}
     - target: {fileID: 1744478972, guid: 69bf9c8dfe6a9e5479d5093236b17108, type: 3}
       propertyPath: projectileLauchSFX.Array.data[2].audioClip
       value: 
@@ -848,8 +876,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sFxPlayer: {fileID: 1399114457}
-  minPitch: 0.9
-  maxpitch: 1.1
 --- !u!4 &772308192
 Transform:
   m_ObjectHideFlags: 0
