@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,21 @@ using UnityEngine;
 public class BackGroundScoroller : MonoBehaviour
 {
     Material material;
-    [SerializeField] Vector2 scrollVelocity; 
+    [SerializeField] Vector2 scrollVelocity;
 
-    void Start()
+
+    private void Awake()
     {
         material = GetComponent<Renderer>().material;//先获取渲染器组件，然后就可以获取材质的值了
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator Start()
     {
-        material.mainTextureOffset += scrollVelocity * Time.deltaTime;
+        while (GameManager.GameState != GameState.GameOver)
+        {
+            material.mainTextureOffset += scrollVelocity * Time.deltaTime;
+            yield return null;
+        }
     }
+
 }

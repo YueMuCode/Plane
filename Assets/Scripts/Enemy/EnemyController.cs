@@ -64,6 +64,7 @@ public class EnemyController : MonoBehaviour
         while (gameObject.activeSelf)
         {
             yield return new WaitForSeconds(Random.Range(minFireInterval, maxFireInterval));
+            if(GameManager.GameState==GameState.GameOver)yield break;
             foreach (var projectile in projectiles)
             {
                 PoolManager.Release(projectile, muzzle.position);

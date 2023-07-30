@@ -7,7 +7,7 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] private GameObject hitFVX;
     [SerializeField] private float damage;
-    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] protected float moveSpeed = 10f;
     [SerializeField] protected Vector2 moveDirection;
 
     [SerializeField] private AudioData []hitSFX;
@@ -21,11 +21,15 @@ public class Projectile : MonoBehaviour
     {
         while (gameObject.activeSelf) //当对象是激活状态时 
         {
-            gameObject.transform.Translate(moveDirection*moveSpeed*Time.deltaTime);
+           Move();
             yield return null;
         }
     }
 
+    public void Move()
+    {
+        gameObject.transform.Translate(moveDirection*moveSpeed*Time.deltaTime);
+    }
     #region 检测碰撞
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -41,4 +45,10 @@ public class Projectile : MonoBehaviour
     }
 
     #endregion
+
+    protected void SetTarget(GameObject target)
+    {
+        this.target = target;
+    }
+    
 }

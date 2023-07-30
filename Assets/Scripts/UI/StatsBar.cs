@@ -16,10 +16,16 @@ public class StatsBar : MonoBehaviour
     private WaitForSeconds waitFordelayFill;
     private Canvas canvas;
     private Coroutine bufferedFillCoroutine;
+
+
+    private float tempFillAmount;
     private void Awake()
     {
-        canvas = GetComponent<Canvas>();
-        canvas.worldCamera=Camera.main;
+       
+        if (TryGetComponent<Canvas>(out Canvas canvas))
+        {
+            canvas.worldCamera=Camera.main;
+        }
         waitFordelayFill = new WaitForSeconds(fillDelay);
     }
 
@@ -61,7 +67,8 @@ public class StatsBar : MonoBehaviour
     }
 
      protected virtual IEnumerator BufferedFillingCoroutine(Image image)
-    {
+     {
+         tempFillAmount = currentFillAmount;
         if (delayFill)
         {
             yield return waitFordelayFill;
@@ -70,7 +77,7 @@ public class StatsBar : MonoBehaviour
         while (t < 1f)
         {
             t += Time.deltaTime * fillSpeed;
-            currentFillAmount = Mathf.Lerp(currentFillAmount, targetFillAmount, t);
+            currentFillAmount = Mathf.Lerp(tempFillAmount, targetFillAmount, t);
             image.fillAmount = currentFillAmount;
             yield return null;
         }

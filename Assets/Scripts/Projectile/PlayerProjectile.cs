@@ -7,7 +7,7 @@ public class PlayerProjectile : Projectile
 {
      private TrailRenderer trail;
 
-     private void Awake()
+    protected virtual private void Awake()
      {
           trail = GetComponentInChildren<TrailRenderer>();
           if (moveDirection != Vector2.right)

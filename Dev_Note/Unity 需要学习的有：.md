@@ -50,7 +50,7 @@ IEnumerator RandomlySpawnCoroutine()
 
 
 
-2、unity中垃圾回收的原理
+2、unityC#中垃圾回收的原理
 
 
 
@@ -75,3 +75,19 @@ IEnumerator RandomlySpawnCoroutine()
 
 
 8、音频组件
+
+
+
+9、委托和事件
+
+
+
+10、C#泛型
+
+
+
+11、Unity中的嵌套式画布
+
+
+
+12、Json数据

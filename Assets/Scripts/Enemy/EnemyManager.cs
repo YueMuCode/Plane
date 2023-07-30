@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class EnemyManager : Singleton<EnemyManager>
 {
+   public GameObject RandomEnemy => enemyList.Count == 0 ? null : enemyList[Random.Range(0, enemyList.Count)];
    public int WaveNumber => waveNumber;
    public float TimeBetweenWaves => timeBetweenWaves;
    [SerializeField] private GameObject[] enemyPrefabs;
@@ -37,7 +38,7 @@ public class EnemyManager : Singleton<EnemyManager>
    {
       while (spawnEnemy)
       {
-         yield return waitUntilNoEnemy;//挂起，直到当前波数的敌人为0
+         
          waveUI.SetActive(true);//激活波数UI
          yield return waitTimeBetweenWaves;//挂起，间隔时间为UI动画的播放时间
          waveUI.SetActive(false);//将波数UI设置为非激活状态
@@ -54,7 +55,7 @@ public class EnemyManager : Singleton<EnemyManager>
          enemyList.Add( PoolManager.Release(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)]));//从对应的对象池中取出对象
          yield return waitTimeBetweenSpawns;
       }
-
+      yield return waitUntilNoEnemy;//挂起，直到当前波数的敌人为0
       waveNumber++;
    }
 

@@ -37,11 +37,14 @@ public class Player : Character
     [SerializeField] GameObject projectile1;
     [SerializeField] GameObject projectile2;
     [SerializeField] GameObject projectile3;
+    [SerializeField] private GameObject projectileOverDrive;
     [SerializeField] Transform muzzleMid;//生成的位置
     [SerializeField] Transform muzzleUp;//生成的位置
     [SerializeField] Transform muzzleDown;//生成的位置
     [SerializeField] float fireTime=0.2f;
     private WaitForSeconds waitForFireInterval;
+    private WaitForSeconds waitForOverdriveFireInterval;
+    private WaitForSeconds waitDecelerationTime;
     private Coroutine tempCoroutine;//中间变量
     [SerializeField,Range(0,2)] private int weaponPowre = 0;
 
@@ -54,17 +57,36 @@ public class Player : Character
     [Header("---Audio----")] [SerializeField]
     private AudioData[] projectileLauchSFX;
     [SerializeField] private AudioData[] dodgeSFX;
-   
+
+    [Header("---OverDrive---")] 
+    [SerializeField] private int overdriveDodgeFactor = 2;
+    [SerializeField] private float overdriveSpeedFactor = 1.2f;
+    [SerializeField] private float overdriveFireFactor = 1.2f;
     private Collider2D myCollider;
     private float currentRoll;
     private bool isDodging=false;
     private float dodgeDuration;
+    private bool isOverDriving = false;
+    private Vector2 tempVelocity;
+    private Quaternion temprotation;
+
+    private readonly float slowMotionDuration=1f;
+
+    private MIssilleSystem missile;
+    private Vector2 moveDiretione;
+    
     
     private void Awake()
     {
         myrigidbody = GetComponent<Rigidbody2D>();
         myCollider = GetComponent<Collider2D>();
+        missile = GetComponent<MIssilleSystem>();
         dodgeDuration = maxRoll / rollSpeed;
+        myrigidbody.gravityScale = 0f;
+        waitForFireInterval=new WaitForSeconds(fireTime);
+        waitHealthRegenerateTime = new WaitForSeconds(healthRegenerateTime);
+        waitForOverdriveFireInterval = new WaitForSeconds(fireTime /= overdriveDodgeFactor);
+        waitDecelerationTime = new WaitForSeconds(decelerationTIme);
     }
     protected override void OnEnable()
     {
@@ -74,6 +96,11 @@ public class Player : Character
         input.onFire += Fire;
         input.onStopFire += stopFire;
         input.onDodge += Dodge;
+        input.onOverdrive += OverDrive;
+        input.onLanuchMissle += LaunchMissile;
+
+        PlayerOverDrive.on += OverDriveOn;
+        PlayerOverDrive.off += OverDriveOff;
 
     }
     private void OnDisable()
@@ -83,14 +110,16 @@ public class Player : Character
         input.onFire -= Fire;
         input.onStopFire -= stopFire;
         input.onDodge -= Dodge;
+        input.onLanuchMissle -= LaunchMissile;
+        PlayerOverDrive.on -= OverDriveOn;
+        PlayerOverDrive.off -= OverDriveOff;
     }
     private void Start()
     {
         statsBar_HUD.Initialize(health,maxHealth);
-        myrigidbody.gravityScale = 0f;
+     
         input.EnableGameplayInput();//���������ź�
-        waitForFireInterval=new WaitForSeconds(fireTime);
-        waitHealthRegenerateTime = new WaitForSeconds(healthRegenerateTime);
+       
        // TakeDamage(50f);
     }
 
@@ -108,9 +137,12 @@ public class Player : Character
             StopCoroutine(tempCoroutine);
         }
 
+        moveDiretione = moveInput.normalized;
         Quaternion moveRotation = Quaternion.AngleAxis(moveRotationAngle * moveInput.y, Vector3.right);
+        StopCoroutine(nameof(DecelerationCoroutine));
         StartCoroutine(MovePositionLimitCoroutine());
-        tempCoroutine= StartCoroutine(MoveCoroutine(accelerationTime,moveInput.normalized * moveSpeed,moveRotation)); 
+        
+        tempCoroutine= StartCoroutine(MoveCoroutine(accelerationTime,moveDiretione * moveSpeed,moveRotation)); 
 
     }
     private void StopMove()
@@ -123,6 +155,7 @@ public class Player : Character
         
         StopCoroutine(nameof(MovePositionLimitCoroutine));
         tempCoroutine= StartCoroutine(MoveCoroutine(decelerationTIme, Vector2.zero,Quaternion.identity));
+        StartCoroutine(nameof(DecelerationCoroutine));
     }
 
     IEnumerator MovePositionLimitCoroutine()//��������������ӿ������ڵ�Э��
@@ -133,14 +166,23 @@ public class Player : Character
             yield return null;
         }
     }
+
+    IEnumerator DecelerationCoroutine()
+    {
+        yield return waitDecelerationTime;
+        StopCoroutine(nameof(MovePositionLimitCoroutine));
+        
+    }
     IEnumerator MoveCoroutine(float time,Vector2 moveVelocity,Quaternion moveRotation)//ʵ�������ƶ����ٶȵ�Э��
     {
         float currentTime = 0f;
+        tempVelocity = myrigidbody.velocity;
+        temprotation = transform.rotation;
         while(currentTime<time)
         {
             currentTime += Time.fixedDeltaTime/accelerationTime;
-            myrigidbody.velocity= Vector2.Lerp(myrigidbody.velocity, moveVelocity, currentTime / time);
-            transform.rotation = Quaternion.Lerp(transform.rotation, moveRotation, currentTime / time);
+            myrigidbody.velocity= Vector2.Lerp(tempVelocity, moveVelocity, currentTime / time);
+            transform.rotation = Quaternion.Lerp(temprotation, moveRotation, currentTime / time);
             yield return null;
         }
 
@@ -167,46 +209,40 @@ public class Player : Character
        
         while (true)
         {
-            // switch (weaponPowre)
-            // {
-            //     case 0:
-            //         Instantiate(projectile1, muzzleMid.position, quaternion.identity);
-            //         break;
-            //     case 1:
-            //         Instantiate(projectile2, muzzleUp.position, quaternion.identity);
-            //         Instantiate(projectile1, muzzleMid.position, quaternion.identity);
-            //         break;
-            //     case 2:
-            //         Instantiate(projectile2, muzzleUp.position, quaternion.identity);
-            //         Instantiate(projectile1, muzzleMid.position, quaternion.identity);
-            //         Instantiate(projectile3, muzzleDown.position, quaternion.identity);
-            //         break;
-            //     default:
-            //         break;
-            // }
-
+    
             switch (weaponPowre)
             {
                 case 0:
-                    PoolManager.Release(projectile1, muzzleMid.position);
+                    PoolManager.Release(isOverDriving? projectileOverDrive: projectile1, muzzleMid.position);
                     break;
                 case 1:
-                    PoolManager.Release(projectile1, muzzleMid.position);
-                    PoolManager.Release(projectile2, muzzleUp.position);
+                    PoolManager.Release(isOverDriving? projectileOverDrive: projectile1, muzzleMid.position);
+                    PoolManager.Release(isOverDriving? projectileOverDrive: projectile2, muzzleUp.position);
                     break;
                 case 2:
-                    PoolManager.Release(projectile1, muzzleMid.position);
-                    PoolManager.Release(projectile2, muzzleUp.position);
-                    PoolManager.Release(projectile3, muzzleDown.position);
+                    PoolManager.Release(isOverDriving? projectileOverDrive: projectile1, muzzleMid.position);
+                    PoolManager.Release(isOverDriving? projectileOverDrive: projectile2, muzzleUp.position);
+                    PoolManager.Release(isOverDriving? projectileOverDrive: projectile3, muzzleDown.position);
                     break;
                 default:
                     break;
             }
             AudioManager.Instance.PlayRandomSFX(projectileLauchSFX);
             //yield return new WaitForSeconds(fireTime);//尽量不要在while里面new
-            yield return waitForFireInterval;
+           // yield return waitForFireInterval;
+           if (isOverDriving)
+           {
+               yield return waitForOverdriveFireInterval;
+           }
+           else
+           {
+               yield return waitForFireInterval;
+           }
         }
     }
+
+
+    
     #endregion
 
 
@@ -218,6 +254,7 @@ public class Player : Character
         statsBar_HUD.UpdateStats(health,maxHealth);
         if (gameObject.activeSelf)
         {
+            Move(moveDiretione);
             if (regenerateHealth)
             {
                 if (healthRegenerateCoroutine != null)
@@ -237,6 +274,8 @@ public class Player : Character
 
     public override void Die()
     {
+        GameManager.onGameOver?.Invoke();
+        GameManager.GameState = GameState.GameOver;
         statsBar_HUD.UpdateStats(0f,maxHealth);
         base.Die();
     }
@@ -284,4 +323,36 @@ public class Player : Character
         isDodging = false;
     }
     #endregion
+
+    #region OverDrive
+
+    void OverDrive()
+    {
+        if (!PlayerEnergy.Instance.IsEnough(PlayerEnergy.MAX)) return;
+        
+        PlayerOverDrive.on.Invoke();
+    }
+
+    void OverDriveOn()
+    {
+        isOverDriving = true;
+        dodgeEnergyCost *= overdriveDodgeFactor;
+        moveSpeed *= overdriveSpeedFactor;
+        TimeController.Instance.BulletTime(slowMotionDuration,5f,slowMotionDuration);
+    }
+
+    void OverDriveOff()
+    {
+        isOverDriving = false;
+        dodgeEnergyCost /= overdriveDodgeFactor;
+        moveSpeed /= overdriveSpeedFactor;
+    }
+
+    #endregion
+
+
+    void LaunchMissile()
+    {
+        missile.Launch(muzzleMid);
+    }
 }
