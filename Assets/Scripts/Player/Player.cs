@@ -34,6 +34,7 @@ public class Player : Character
     [SerializeField] float decelerationTIme = 3f;//减速度  
     [SerializeField] float moveRotationAngle = 50f;
     //子弹
+    [SerializeField] private ParticleSystem muzzleVFX;
     [SerializeField] GameObject projectile1;
     [SerializeField] GameObject projectile2;
     [SerializeField] GameObject projectile3;
@@ -74,7 +75,9 @@ public class Player : Character
 
     private MIssilleSystem missile;
     private Vector2 moveDiretione;
-    
+
+    private readonly float InvincibleTime = 1f;//受伤后的无敌时间
+    private WaitForSeconds waitInvincibleTime;
     
     private void Awake()
     {
@@ -87,6 +90,7 @@ public class Player : Character
         waitHealthRegenerateTime = new WaitForSeconds(healthRegenerateTime);
         waitForOverdriveFireInterval = new WaitForSeconds(fireTime /= overdriveDodgeFactor);
         waitDecelerationTime = new WaitForSeconds(decelerationTIme);
+        waitInvincibleTime = new WaitForSeconds(InvincibleTime);
     }
     protected override void OnEnable()
     {
@@ -151,7 +155,8 @@ public class Player : Character
         {
             StopCoroutine(tempCoroutine);
         }
-        
+
+        moveDiretione = Vector2.zero;
         
         StopCoroutine(nameof(MovePositionLimitCoroutine));
         tempCoroutine= StartCoroutine(MoveCoroutine(decelerationTIme, Vector2.zero,Quaternion.identity));
@@ -194,13 +199,14 @@ public class Player : Character
 
     void Fire()
     {
-        
+        muzzleVFX.Play();
         StartCoroutine("FireCoroutine");
     }
 
     void stopFire()
     {
-         StopCoroutine("FireCoroutine");
+        muzzleVFX.Stop();
+        StopCoroutine("FireCoroutine");
         // StopCoroutine(FireCoroutine());//这不会工作,unity引擎的老问题???
     }
 
@@ -255,6 +261,7 @@ public class Player : Character
         if (gameObject.activeSelf)
         {
             Move(moveDiretione);
+            StartCoroutine(InvincibleCoroutine());
             if (regenerateHealth)
             {
                 if (healthRegenerateCoroutine != null)
@@ -278,6 +285,13 @@ public class Player : Character
         GameManager.GameState = GameState.GameOver;
         statsBar_HUD.UpdateStats(0f,maxHealth);
         base.Die();
+    }
+
+    IEnumerator InvincibleCoroutine()
+    {
+        myCollider.isTrigger = true;
+        yield return waitInvincibleTime;
+        myCollider.isTrigger = false;
     }
 
     #endregion

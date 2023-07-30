@@ -388,7 +388,23 @@ bug的修复：玩家会移动出边框
 
 32、1boss血条
 
-32
+32![image-20230730204540502](C:\Users\LinYueMU\AppData\Roaming\Typora\typora-user-images\image-20230730204540502.png)
+
+
+
+33、枪口特效
+
+
+
+34、boss波数
+
+
+
+目前的bug：1、玩家不能移动
+
+​					  2、枪口特效不能正常显示
+
+​					  3、UI的显示也有点问题
 
 
 

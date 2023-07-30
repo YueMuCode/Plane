@@ -34,7 +34,7 @@ public class StatsBar : MonoBehaviour
         StopAllCoroutines();
     }
 
-    public virtual void Initialize(float currentValue, float maxValue)//初始化
+    public virtual void Initialize(float currentValue, float maxValue)//?????
     {
         currentFillAmount = currentValue / maxValue;
         targetFillAmount = currentFillAmount;
@@ -48,15 +48,15 @@ public class StatsBar : MonoBehaviour
         targetFillAmount = currentValue / maxValue;
         if (bufferedFillCoroutine != null)
         {
-            StopCoroutine(bufferedFillCoroutine);//为什么要停用
+            StopCoroutine(bufferedFillCoroutine);//???????
         }
-        //状态减少时
+        //???????
         if (currentFillAmount > targetFillAmount)
         {
             fillImageFront.fillAmount = targetFillAmount;
             bufferedFillCoroutine=StartCoroutine(BufferedFillingCoroutine(fillImageBack));
         }
-        //状态增加时
+        //???????
         if (currentFillAmount < targetFillAmount)
         {
             fillImageBack.fillAmount = targetFillAmount;

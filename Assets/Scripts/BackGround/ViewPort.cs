@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class  ViewPort : Singleton<ViewPort>
 {
+    public float MaxX => maxX;
     float minX;//视口左
     float maxX;//视口右
     float minY;//视口下

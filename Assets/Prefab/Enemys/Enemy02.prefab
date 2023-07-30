@@ -14623,6 +14623,7 @@ MonoBehaviour:
   projectiles:
   - {fileID: 2921942583794357655, guid: ba6bba02b6281654f8f30234c21e1c71, type: 3}
   muzzle: {fileID: 6534113399707153723}
+  muzzleVFX: {fileID: 6312347931691750709, guid: bcdfcb20bdfc97f44a4f585803958b75, type: 3}
   enemyProjectileSFX:
   - audioClip: {fileID: 8300000, guid: 406abe6e803b244eca380af5865dc5cb, type: 3}
     volume: 0.3
@@ -14652,6 +14653,8 @@ MonoBehaviour:
   - audioClip: {fileID: 8300000, guid: 0f2184b0c1d094741b11e8f4077c52e9, type: 3}
     volume: 0.3
   enemyDeathRewardEnergy: 3
+  enemyScorePoint: 100
+  healthFactor: 2
 --- !u!50 &2879002797966744072
 Rigidbody2D:
   serializedVersion: 4
@@ -14696,6 +14699,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8278599378363408512}
     m_Modifications:
+    - target: {fileID: 8875710463075062540, guid: 96bcab62a9470ed44b659f973b2bf445, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8875710463965221058, guid: 96bcab62a9470ed44b659f973b2bf445, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8875710464152680122, guid: 96bcab62a9470ed44b659f973b2bf445, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

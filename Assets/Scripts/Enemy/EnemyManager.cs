@@ -10,12 +10,14 @@ public class EnemyManager : Singleton<EnemyManager>
    public int WaveNumber => waveNumber;
    public float TimeBetweenWaves => timeBetweenWaves;
    [SerializeField] private GameObject[] enemyPrefabs;
+   [SerializeField] private GameObject bossPrefab;
    [SerializeField] private float timeBetweenSpawns = 1f;
    [SerializeField] private float timeBetweenWaves = 1f;
    [SerializeField] private int minEnemyAmount = 4;//最低的敌人数量
    [SerializeField] private int maxEnemyAmount = 10;//最多的敌人数量
    [SerializeField] private bool spawnEnemy = true;//是否自动生成敌人
    [SerializeField] private GameObject waveUI;//敌人的波数显示UI
+   [SerializeField] private int bossWaveNumber;
    private int waveNumber = 1;//当前波数
    private int enemyAmount;//敌人的数量
    private List<GameObject> enemyList;//记录当前存活的敌人数量
@@ -36,7 +38,7 @@ public class EnemyManager : Singleton<EnemyManager>
 
    IEnumerator Start()//
    {
-      while (spawnEnemy)
+      while (spawnEnemy&&GameManager.GameState!=GameState.GameOver)
       {
          
          waveUI.SetActive(true);//激活波数UI
@@ -49,11 +51,20 @@ public class EnemyManager : Singleton<EnemyManager>
 
    IEnumerator RandomlySpawnCoroutine()//生成敌人
    {
-      enemyAmount = Mathf.Clamp(enemyAmount, minEnemyAmount + waveNumber / 3, maxEnemyAmount);
-      for (int i = 0; i < enemyAmount; i++)
+      if (waveNumber%bossWaveNumber==0)
       {
-         enemyList.Add( PoolManager.Release(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)]));//从对应的对象池中取出对象
-         yield return waitTimeBetweenSpawns;
+         var boss= PoolManager.Release(bossPrefab);
+         enemyList.Add(boss);
+      }
+      else
+      {
+         enemyAmount = Mathf.Clamp(enemyAmount, minEnemyAmount + waveNumber / bossWaveNumber, maxEnemyAmount);
+         for (int i = 0; i < enemyAmount; i++)
+         {
+            enemyList.Add( PoolManager.Release(enemyPrefabs[Random.Range(0, enemyPrefabs.Length)]));//从对应的对象池中取出对象
+            yield return waitTimeBetweenSpawns;
+         }
+       
       }
       yield return waitUntilNoEnemy;//挂起，直到当前波数的敌人为0
       waveNumber++;

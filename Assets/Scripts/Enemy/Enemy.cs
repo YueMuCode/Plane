@@ -9,8 +9,14 @@ public class Enemy : Character
   [SerializeField]private int enemyDeathRewardEnergy=3;
 
   [SerializeField] private int enemyScorePoint = 100;
+  [SerializeField] protected int healthFactor;
+  protected override void OnEnable()
+  {
+    SetHealth();
+    base.OnEnable();
+  }
 
-  private void OnCollisionEnter2D(Collision2D other)
+  protected virtual void OnCollisionEnter2D(Collision2D other)
   {
     if (other.gameObject.TryGetComponent<Player>(out Player player))
     {
@@ -25,5 +31,10 @@ public class Enemy : Character
     PlayerEnergy.Instance.Obtain(enemyDeathRewardEnergy);
     EnemyManager.Instance.RemoveFromList(gameObject);
     base.Die();
+  }
+
+  protected virtual void SetHealth()
+  {
+    maxHealth += (int)(EnemyManager.Instance.WaveNumber / healthFactor);
   }
 }

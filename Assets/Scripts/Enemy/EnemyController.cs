@@ -8,21 +8,25 @@ using Random = UnityEngine.Random;
 public class EnemyController : MonoBehaviour
 {
     [Header("------MOVE------")]
-    [SerializeField] private float paddingX;
-    [SerializeField] private float paddingY;
-    [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private float moveRotationAngle = 25f;
+    [SerializeField] protected float paddingX;
+    [SerializeField] protected float paddingY;
+    [SerializeField] protected float moveSpeed = 2f;
+    [SerializeField] protected float moveRotationAngle = 25f;
     
     [Header("-----Fire------")]
-    [SerializeField] private float minFireInterval;
-    [SerializeField] private float maxFireInterval;
-    [SerializeField] private GameObject[] projectiles;
-    [SerializeField] private Transform muzzle;
+    [SerializeField] protected float minFireInterval;
+    [SerializeField] protected float maxFireInterval;
+    [SerializeField] protected GameObject[] projectiles;
+    [SerializeField] protected Transform muzzle;
+    [SerializeField] protected ParticleSystem muzzleVFX;
 
     [Header("---Audio---")]
-    [SerializeField] private AudioData[] enemyProjectileSFX;
+    [SerializeField] protected AudioData[] enemyProjectileSFX;
+
+    protected Vector3 targetposition;
     
-    private void OnEnable()
+    
+    protected virtual void OnEnable()
     {
         StartCoroutine(nameof(RandomlyMovingCoroutine));
         StartCoroutine(nameof(RandomlyFireCoroutine));
@@ -38,7 +42,7 @@ public class EnemyController : MonoBehaviour
     {
         
             transform.position = ViewPort.Instance.RandomEnemySpawnPosition(paddingX, paddingY);
-            Vector3 targetposition = ViewPort.Instance.RandomRightHalfPosition(paddingX, paddingY);
+             targetposition = ViewPort.Instance.RandomRightHalfPosition(paddingX, paddingY);
             while (gameObject.activeSelf)
             {
                 //未到达目标位置
@@ -59,7 +63,7 @@ public class EnemyController : MonoBehaviour
 
     #region 敌人开火
 
-    IEnumerator RandomlyFireCoroutine()
+  protected  virtual IEnumerator RandomlyFireCoroutine()
     {
         while (gameObject.activeSelf)
         {
@@ -70,6 +74,7 @@ public class EnemyController : MonoBehaviour
                 PoolManager.Release(projectile, muzzle.position);
             }
             AudioManager.Instance.PlayRandomSFX(enemyProjectileSFX);
+            muzzleVFX.Play();
         }
     }
 
