@@ -8,7 +8,7 @@ public class EnemyBeam : MonoBehaviour
   [SerializeField] private float damage = 50f;
   [SerializeField] private GameObject hitVFX;
 
-  private void OnCollisionEnter2D(Collision2D collision)
+  private void OnCollisionStay2D(Collision2D collision)
   {
     if (collision.gameObject.TryGetComponent<Player>(out Player player))
     {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.IO.LowLevel.Unsafe;
 using Unity.Mathematics;
 using UnityEngine;
@@ -124,7 +125,7 @@ public class Player : Character
      
         input.EnableGameplayInput();//���������ź�
        
-       // TakeDamage(50f);
+        //TakeDamage(50f);
     }
 
   
@@ -364,9 +365,34 @@ public class Player : Character
 
     #endregion
 
+    #region MissileSystem
 
-    void LaunchMissile()
-    {
-        missile.Launch(muzzleMid);
-    }
+        
+        void LaunchMissile()
+        {
+            missile.Launch(muzzleMid);
+        }
+
+        public void PickUpMissile()
+        {
+            missile.PickUp();
+        }
+
+    #endregion
+
+    #region FullHP
+
+        public bool IsFullHealth => health == maxHealth;
+        public bool IsFullPower => weaponPowre == 2;
+
+    #endregion
+
+        public void PowerUp()
+        {
+            weaponPowre = Mathf.Clamp(++weaponPowre, 0, 2);
+        }
+        public void PowerDown()
+        {
+            weaponPowre = Mathf.Clamp(--weaponPowre, 0, 2);
+        }
 }
